@@ -67,6 +67,7 @@
             letter-spacing: 0.5px;
             color: var(--white);
             text-decoration: none;
+            cursor: pointer;
         }
 
         .logo i {
@@ -92,6 +93,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            cursor: pointer;
         }
 
         .nav-links a:hover, .nav-links a.active {
@@ -265,6 +267,7 @@
             display: flex;
             justify-content: flex-end;
             margin-bottom: 1rem;
+            gap: 0.5rem;
         }
 
         .lang-btn {
@@ -368,19 +371,19 @@
     <!-- Header Navigation -->
     <header>
         <nav class="navbar">
-            <a href="#" class="logo" onclick="navigateTo('home'); return false;">
-                <i class="fa-solid => fa-droplet"></i> Catchment
+            <a class="logo" onclick="navigateTo('home')">
+                <i class="fa-solid fa-droplet"></i> Catchment
             </a>
             <div class="hamburger" id="hamburgerBtn" onclick="toggleMenu()">
                 <i class="fa-solid fa-bars"></i>
             </div>
             <ul class="nav-links" id="navMenu">
-                <li><a href="#" id="nav-home" class="active" onclick="navigateTo('home'); return false;"><i class="fa-solid fa-house"></i> Home</a></li>
-                <li><a href="#" id="nav-calculator" onclick="navigateTo('calculator'); return false;"><i class="fa-solid fa-calculator"></i> Calculator</a></li>
-                <li><a href="#" id="nav-design" onclick="navigateTo('design'); return false;"><i class="fa-solid fa-drafting-compass"></i> Design & Tank</a></li>
-                <li><a href="#" id="nav-guide" onclick="navigateTo('guide'); return false;"><i class="fa-solid fa-book-open"></i> Guide</a></li>
-                <li><a href="#" id="nav-awareness" onclick="navigateTo('awareness'); return false;"><i class="fa-solid fa-leaf"></i> Awareness</a></li>
-                <li><a href="#" id="nav-login" class="login-btn" onclick="navigateTo('login'); return false;"><i class="fa-solid fa-user"></i> <span id="loginBtnText">Login</span></a></li>
+                <li><a id="nav-home" class="active" onclick="navigateTo('home')"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a id="nav-calculator" onclick="navigateTo('calculator')"><i class="fa-solid fa-calculator"></i> Calculator</a></li>
+                <li><a id="nav-design" onclick="navigateTo('design')"><i class="fa-solid fa-drafting-compass"></i> Design & Tank</a></li>
+                <li><a id="nav-guide" onclick="navigateTo('guide')"><i class="fa-solid fa-book-open"></i> Guide</a></li>
+                <li><a id="nav-awareness" onclick="navigateTo('awareness')"><i class="fa-solid fa-leaf"></i> Awareness</a></li>
+                <li><a id="nav-login" class="login-btn" onclick="navigateTo('login')"><i class="fa-solid fa-user"></i> <span id="loginBtnText">Login</span></a></li>
             </ul>
         </nav>
     </header>
@@ -427,29 +430,27 @@
             <h2 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-calculator"></i> Rainwater Yield Calculator</h2>
             <div class="calculator-container">
                 <div class="card">
-                    <form id="calcForm" oninput="calculateFeasibility()">
-                        <div class="form-group">
-                            <label for="roofArea">Rooftop Catchment Area (m²)</label>
-                            <input type="number" id="roofArea" placeholder="e.g. 100" value="100" min="1">
-                        </div>
-                        <div class="form-group">
-                            <label for="annualRainfall">Average Annual Rainfall (mm)</label>
-                            <input type="number" id="annualRainfall" placeholder="e.g. 800" value="800" min="1">
-                        </div>
-                        <div class="form-group">
-                            <label for="roofType">Roof Surface Material (Runoff Coeff.)</label>
-                            <select id="roofType" onchange="calculateFeasibility()">
-                                <option value="0.90">Metal Sheet / Corrugated (0.90)</option>
-                                <option value="0.85" selected>Concrete Slab / Tiled Roof (0.85)</option>
-                                <option value="0.80">Asphalt / Paved Surface (0.80)</option>
-                                <option value="0.30">Green Roof (0.30)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="filterEfficiency">Filter System Efficiency (%)</label>
-                            <input type="number" id="filterEfficiency" value="90" min="50" max="100">
-                        </div>
-                    </form>
+                    <div class="form-group">
+                        <label for="roofArea">Rooftop Catchment Area (m²)</label>
+                        <input type="number" id="roofArea" value="100" min="1" oninput="calculateFeasibility()">
+                    </div>
+                    <div class="form-group">
+                        <label for="annualRainfall">Average Annual Rainfall (mm)</label>
+                        <input type="number" id="annualRainfall" value="800" min="1" oninput="calculateFeasibility()">
+                    </div>
+                    <div class="form-group">
+                        <label for="roofType">Roof Surface Material (Runoff Coeff.)</label>
+                        <select id="roofType" onchange="calculateFeasibility()">
+                            <option value="0.90">Metal Sheet / Corrugated (0.90)</option>
+                            <option value="0.85" selected>Concrete Slab / Tiled Roof (0.85)</option>
+                            <option value="0.80">Asphalt / Paved Surface (0.80)</option>
+                            <option value="0.30">Green Roof (0.30)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filterEfficiency">Filter System Efficiency (%)</label>
+                        <input type="number" id="filterEfficiency" value="90" min="50" max="100" oninput="calculateFeasibility()">
+                    </div>
                 </div>
 
                 <div class="results-box">
@@ -498,7 +499,7 @@
 
         <!-- 4. IMPLEMENTATION GUIDE PAGE -->
         <section id="guide" class="page-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
                 <h2><i class="fa-solid fa-book-open"></i> Installation & Planning Guide</h2>
                 <div class="lang-toggle">
                     <button class="lang-btn active" id="btn-en" onclick="setLanguage('en')">English</button>
@@ -519,4 +520,7 @@
             </div>
 
             <!-- Kannada Guide -->
-            <div id="guid
+            <div id="guide-kn" class="card" style="display: none;">
+                <h3>ಮಳೆನೀರು ಕೊಯ್ಲು ಅನುಷ್ಠಾನ ಮಾರ್ಗದರ್ಶಿ</h3>
+                <ol style="margin-left: 1.5rem; margin-top: 1rem; line-height: 1.8;">
+    
