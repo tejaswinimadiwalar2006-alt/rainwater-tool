@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catchment — Rainwater Harvesting Feasibility Tool</title>
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #0077b6;
+            --primary-dark: #023e8a;
+            --primary-light: #00b4d8;
+            --secondary-color: #48cae4;
+            --accent-color: #caf0f8;
+            --text-dark: #1d3557;
+            --text-muted: #6c757d;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --border-radius: 12px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Navigation Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+            color: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            transition: all var(--transition-speed) ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .login-btn {
+            background-color: var(--secondary-color);
+            color: var(--primary-dark) !important;
+            font-weight: 600 !important;
+            padding: 0.5rem 1.2rem !important;
+            border-radius: 20px !important;
+        }
+
+        .login-btn:hover {
+            background-color: var(--white) !important;
+            color: var(--primary-dark) !important;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--white);
+        }
+
+        /* Page Container & Section Visibility Toggle */
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        .page-section {
+            display: none; /* Hide all pages by default */
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .page-section.active {
+            display: block; /* Only active page is displayed */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Page Component Styles */
+        .hero {
+            background: linear-gradient(rgba(0,119,182,0.85), rgba(2,62,138,0.9)), url('https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?auto=format&fit=crop&w=1200&q=80') center/cover;
+            color: var(--white);
+            text-align: center;
+            padding: 4rem 2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .hero p { font-size: 1.1rem; max-width: 700px; margin: 0 auto 1.5rem; line-height: 1.6; opacity: 0.95; }
+
+        .btn-primary {
+            background: var(--secondary-color);
+            color: var(--primary-dark);
+            border: none;
+            padding: 0.8rem 1.8rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background var(--transition-speed);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: var(--white);
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 1.8rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            transition: transform var(--transition-speed);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card i {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .card h3 { margin-bottom: 0.5rem; color: var(--primary-dark); }
+
+        /* Calculator Section Styling */
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0,119,182,0.15);
+        }
+
+        .results-box {
+            background: linear-gradient(145deg, var(--primary-dark), var(--primary-color));
+            color: var(--white);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+        }
+
+        .results-box h3 {
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.15);
+        }
+
+        .result-item span:last-child {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+        }
+
+        /* Language Toggle Button for Guide */
+        .lang-toggle {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1rem;
+        }
+
+        .lang-btn {
+            background: #e9ecef;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+
+        .lang-btn.active {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* Login Form Styling */
+        .login-card {
+            max-width: 400px;
+            margin: 3rem auto;
+            padding: 2.5rem;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            text-align: center;
+        }
+
+        .login-card h2 {
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background var(--transition-speed);
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-dark);
+        }
+
+        /* User Status Banner */
+        .user-status {
+            background-color: #e3f2fd;
+            border-left: 4px solid var(--primary-color);
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+        }
+
+        /* Responsive Layout Adjustments */
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--primary-dark);
+                padding: 1rem;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <nav class="navbar">
+            <a href="#" class="logo" onclick="navigateTo('home'); return false;">
+                <i class="fa-solid => fa-droplet"></i> Catchment
+            </a>
+            <div class="hamburger" id="hamburgerBtn" onclick="toggleMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+            <ul class="nav-links" id="navMenu">
+                <li><a href="#" id="nav-home" class="active" onclick="navigateTo('home'); return false;"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="#" id="nav-calculator" onclick="navigateTo('calculator'); return false;"><i class="fa-solid fa-calculator"></i> Calculator</a></li>
+                <li><a href="#" id="nav-design" onclick="navigateTo('design'); return false;"><i class="fa-solid fa-drafting-compass"></i> Design & Tank</a></li>
+                <li><a href="#" id="nav-guide" onclick="navigateTo('guide'); return false;"><i class="fa-solid fa-book-open"></i> Guide</a></li>
+                <li><a href="#" id="nav-awareness" onclick="navigateTo('awareness'); return false;"><i class="fa-solid fa-leaf"></i> Awareness</a></li>
+                <li><a href="#" id="nav-login" class="login-btn" onclick="navigateTo('login'); return false;"><i class="fa-solid fa-user"></i> <span id="loginBtnText">Login</span></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Container with Multi-Page Sections -->
+    <main>
+
+        <!-- Dynamic User Banner -->
+        <div id="userBanner" class="user-status" style="display: none;">
+            <span><i class="fa-solid fa-circle-user"></i> Logged in as: <strong id="userDisplayEmail">user@example.com</strong></span>
+            <button onclick="logout()" style="background:none; border:none; color: #d9534f; cursor:pointer; font-weight:600;">Logout</button>
+        </div>
+
+        <!-- 1. HOME PAGE -->
+        <section id="home" class="page-section active">
+            <div class="hero">
+                <h1>Rainwater Harvesting Feasibility Assessment</h1>
+                <p>Analyze your roof's rainwater catchment potential, calculate optimal storage tank capacity, and make informed decisions for sustainable water conservation.</p>
+                <button class="btn-primary" onclick="navigateTo('calculator')"><i class="fa-solid fa-calculator"></i> Launch Calculator</button>
+            </div>
+
+            <h2 style="text-align: center; margin-bottom: 1rem;">Core Feasibility Tools</h2>
+            <div class="grid-3">
+                <div class="card" onclick="navigateTo('calculator')" style="cursor: pointer;">
+                    <i class="fa-solid fa-calculator"></i>
+                    <h3>Harvest Potential Calculator</h3>
+                    <p>Input rooftop dimensions and rainfall figures to calculate total collectable rainwater yield.</p>
+                </div>
+                <div class="card" onclick="navigateTo('design')" style="cursor: pointer;">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <h3>Tank Capacity & Design</h3>
+                    <p>Plan ideal storage tank sizes and filter components based on demand and dry-spells.</p>
+                </div>
+                <div class="card" onclick="navigateTo('guide')" style="cursor: pointer;">
+                    <i class="fa-solid fa-language"></i>
+                    <h3>Bilingual Implementation Guide</h3>
+                    <p>Step-by-step installation instructions available in English & Kannada (ಕನ್ನಡ).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. CALCULATOR PAGE -->
+        <section id="calculator" class="page-section">
+            <h2 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-calculator"></i> Rainwater Yield Calculator</h2>
+            <div class="calculator-container">
+                <div class="card">
+                    <form id="calcForm" oninput="calculateFeasibility()">
+                        <div class="form-group">
+                            <label for="roofArea">Rooftop Catchment Area (m²)</label>
+                            <input type="number" id="roofArea" placeholder="e.g. 100" value="100" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="annualRainfall">Average Annual Rainfall (mm)</label>
+                            <input type="number" id="annualRainfall" placeholder="e.g. 800" value="800" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="roofType">Roof Surface Material (Runoff Coeff.)</label>
+                            <select id="roofType" onchange="calculateFeasibility()">
+                                <option value="0.90">Metal Sheet / Corrugated (0.90)</option>
+                                <option value="0.85" selected>Concrete Slab / Tiled Roof (0.85)</option>
+                                <option value="0.80">Asphalt / Paved Surface (0.80)</option>
+                                <option value="0.30">Green Roof (0.30)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterEfficiency">Filter System Efficiency (%)</label>
+                            <input type="number" id="filterEfficiency" value="90" min="50" max="100">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="results-box">
+                    <h3>Feasibility Assessment</h3>
+                    <div class="result-item">
+                        <span>Annual Rainfall Potential:</span>
+                        <span id="resTotalLitres">0 Liters</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Daily Average Collection:</span>
+                        <span id="resDailyAvg">0 Liters/day</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Recommended Tank Volume:</span>
+                        <span id="resRecommendedTank">0 Liters</span>
+                    </div>
+                    <div style="margin-top: 1.5rem; background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px;">
+                        <p style="font-size: 0.85rem; line-height: 1.4;"><strong>Formula Used:</strong><br>
+                        Harvested Yield (Liters) = Roof Area (m²) × Annual Rainfall (mm) × Runoff Coefficient × Filter Efficiency</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. DESIGN & TANK PLANNING PAGE -->
+        <section id="design" class="page-section">
+            <h2 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-drafting-compass"></i> Tank Sizing & System Design</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <i class="fa-solid fa-filter"></i>
+                    <h3>First Flush Diverter</h3>
+                    <p>Always route the initial 1–2 mm of rainfall away from the storage tank. This flushes away dust, debris, and bird droppings collected on the rooftop.</p>
+                </div>
+                <div class="card">
+                    <i class="fa-solid fa-cubes-stacked"></i>
+                    <h3>Storage Tank Sizing</h3>
+                    <p>Recommended minimum tank capacity is roughly 20–25% of annual harvest potential to store water effectively across non-rainy periods.</p>
+                </div>
+                <div class="card">
+                    <i class="fa-solid fa-vial"></i>
+                    <h3>Filtration Chamber</h3>
+                    <p>Integrate a multi-layer filter consisting of coarse sand, gravel, and charcoal prior to tank entry to maintain clean stored water.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. IMPLEMENTATION GUIDE PAGE -->
+        <section id="guide" class="page-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2><i class="fa-solid fa-book-open"></i> Installation & Planning Guide</h2>
+                <div class="lang-toggle">
+                    <button class="lang-btn active" id="btn-en" onclick="setLanguage('en')">English</button>
+                    <button class="lang-btn" id="btn-kn" onclick="setLanguage('kn')">ಕನ್ನಡ (Kannada)</button>
+                </div>
+            </div>
+
+            <!-- English Guide -->
+            <div id="guide-en" class="card">
+                <h3>Steps for Rooftop Rainwater Harvesting</h3>
+                <ol style="margin-left: 1.5rem; margin-top: 1rem; line-height: 1.8;">
+                    <li><strong>Catchment Inspection:</strong> Clean the roof surface thoroughly and repair any cracks or leakages.</li>
+                    <li><strong>Gutter Integration:</strong> Attach UV-resistant PVC gutters along roof slopes to capture runoff.</li>
+                    <li><strong>First-Flush Installation:</strong> Install a manual or automatic divert pipe before the storage inlet.</li>
+                    <li><strong>Filter Connection:</strong> Direct diverted water into a sand-gravel filter unit.</li>
+                    <li><strong>Tank Storage & Recharge:</strong> Direct filtered water into an above-ground tank or an underground groundwater recharge pit.</li>
+                </ol>
+            </div>
+
+            <!-- Kannada Guide -->
+            <div id="guid
